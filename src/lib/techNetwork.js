@@ -18,7 +18,7 @@ export function initTechNetwork(canvas) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ===== TUNABLES ===== */
-  const R = 3.2;          // sphere radius (bigger = bigger ball)
+  const R = 3.6;          // sphere radius (bigger = bigger ball)
   const GROUP_Y = -0.3;   // move ball DOWN -> negative
   const LINEWIDTH = 2.5;  // connecting-line thickness (px)
   const SPREAD = 0.95;    // node spacing
@@ -210,9 +210,14 @@ export function initTechNetwork(canvas) {
       idleSpin = group.rotation.y - scrollRotEased;
     } else {
       if (!reduce) idleSpin += (hoverI >= 0 ? AUTO * 0.15 : AUTO);
-      group.rotation.y += ((idleSpin + scrollRotEased) - group.rotation.y) * 0.12;
+      // subtle tilt toward the cursor while it's over the canvas (adds life when idle)
+      const over = Math.abs(mouse.x) <= 1 && Math.abs(mouse.y) <= 1;
+      const tiltY = (!reduce && over) ? mouse.x * 0.18 : 0;   // yaw toward cursor
+      const tiltX = (!reduce && over) ? -mouse.y * 0.13 : 0;  // pitch toward cursor
+      group.rotation.y += ((idleSpin + scrollRotEased + tiltY) - group.rotation.y) * 0.09;
       velX *= 0.85;
-      group.rotation.x = THREE.MathUtils.clamp(group.rotation.x + velX, -0.9, 0.9);
+      group.rotation.x += velX + ((tiltX - group.rotation.x) * 0.06);
+      group.rotation.x = THREE.MathUtils.clamp(group.rotation.x, -0.9, 0.9);
     }
     if (scrollZoom !== null && !dragging) {
       camera.position.z += (scrollZoom - camera.position.z) * 0.06;

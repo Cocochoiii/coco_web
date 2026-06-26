@@ -3,38 +3,52 @@ import React, { useEffect, useRef, useState } from 'react';
 /**
  * A single "What I build" card.
  *  - tap / Enter / Space flips it (aria-pressed reflects state)
- *  - hovering lights it (.lit), matching the build interactive layer
+ *  - hovering lights it (.lit) and tilts it in 3D toward the cursor (depth on hover)
  *  - each chip stops propagation (so it won't also flip the card) and calls
  *    onChip(tech) — the parent scrolls to the stack and focuses that node.
  *
- * IMPORTANT: the scroll-reveal `in` class is tracked in React state (not added
- * imperatively). Because flipping/lighting changes this element's className,
- * React re-renders and rewrites the whole class attribute — if `in` were added
- * imperatively (the way the shared useReveal hook does it) that re-render would
- * wipe it, and the card would snap back to its hidden reveal state and vanish on
- * the first hover/click. Keeping `in` in state makes it survive re-renders.
+ * IMPORTANT: the scroll-reveal `in`/`out` classes are tracked in React state (not
+ * added imperatively). Flipping/lighting changes this element's className, so React
+ * re-renders and rewrites the whole class attribute — if `in` were added imperatively
+ * that re-render would wipe it and the card would vanish on the first hover/click.
+ * Keeping reveal state in React makes it survive re-renders.
  *
- * Chips are real <button>s so they stay keyboard-reachable; stopPropagation
- * keeps the flip and the chip actions cleanly separated.
+ * The hover tilt is written straight to element.style.transform (a visual-only style
+ * React never sets here). `.lit` scales via the independent `scale` property, so the
+ * tilt transform and the lit scale never fight. On mouse-leave we clear the inline
+ * transform/transition so the card springs back using the CSS easing — and, if it is
+ * leaving the viewport, settles into the `.out` exit state.
  */
 export default function FlipCard({ card, revealClass = '', delay = 0, onChip }) {
   const [flipped, setFlipped] = useState(false);
   const [lit, setLit] = useState(false);
   const [inView, setInView] = useState(false);
+  const [out, setOut] = useState(false);
   const ref = useRef(null);
+  const reduceRef = useRef(false);
 
+  useEffect(() => {
+    reduceRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  // enter/exit symmetry (keeps observing; direction-aware exit)
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !('IntersectionObserver' in window)) { setInView(true); return; }
+    if (reduceRef.current || !('IntersectionObserver' in window)) { setInView(true); return; }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) { setInView(true); io.unobserve(e.target); }
+          if (e.isIntersecting) { setInView(true); setOut(false); }
+          else {
+            setInView(false);
+            const r = e.boundingClientRect;
+            const vh = window.innerHeight || 1;
+            setOut((r.top + r.height / 2) < vh / 2);
+          }
         });
       },
-      { threshold: 0.14, rootMargin: '0px 0px -8% 0px' }
+      { threshold: 0, rootMargin: '-14% 0px -10% 0px' }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -57,7 +71,29 @@ export default function FlipCard({ card, revealClass = '', delay = 0, onChip }) 
     }
   };
 
-  const cls = ['flip', 'reveal', revealClass, inView && 'in', flipped && 'flipped', lit && 'lit']
+  // 3D tilt toward the cursor (fast follow; CSS handles the spring-back on leave)
+  const onMove = (e) => {
+    if (reduceRef.current) return;
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
+    const ny = (e.clientY - r.top) / r.height - 0.5;
+    const ry = (nx * 10).toFixed(2);                   // max ~5deg
+    const rx = (-ny * 10).toFixed(2);
+    el.style.transition = 'transform .14s ease-out, scale .25s cubic-bezier(.2,.7,.2,1)';
+    el.style.transform = `perspective(820px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  };
+  const onEnter = () => setLit(true);
+  const onLeave = () => {
+    setLit(false);
+    const el = ref.current;
+    if (!el) return;
+    el.style.transition = '';  // back to the CSS easing
+    el.style.transform = '';   // springs back to none (or to the .out exit transform)
+  };
+
+  const cls = ['flip', 'reveal', revealClass, inView && 'in', out && 'out', flipped && 'flipped', lit && 'lit']
     .filter(Boolean)
     .join(' ');
 
@@ -72,8 +108,9 @@ export default function FlipCard({ card, revealClass = '', delay = 0, onChip }) 
       aria-label={card.title}
       onClick={toggle}
       onKeyDown={onKeyDown}
-      onMouseEnter={() => setLit(true)}
-      onMouseLeave={() => setLit(false)}
+      onMouseEnter={onEnter}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
     >
       <div className="flip-inner">
         <div className="flip-front">

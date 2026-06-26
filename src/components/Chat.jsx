@@ -149,7 +149,7 @@ export default function Chat({ intro, initialSuggest, active = false }) {
 
   return (
     <>
-      <div className="chat__scroll" ref={scrollRef} role="log" aria-live="polite">
+      <div className="chat__scroll" ref={scrollRef} role="log" aria-live="polite" data-lenis-prevent>
         {items.map((it) => {
           if (it.type === 'bot') {
             return (

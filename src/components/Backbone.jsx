@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import useRafScroll from '../hooks/useRafScroll.js';
+import { scrollToTarget } from '../lib/scrollTo.js';
 
 const NODES = [
   { href: '#home', label: 'Home' },
@@ -42,8 +43,7 @@ export default function Backbone() {
 
   const jump = (e, href) => {
     e.preventDefault();
-    const t = document.querySelector(href);
-    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToTarget(href);
   };
 
   return (

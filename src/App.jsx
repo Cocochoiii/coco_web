@@ -1,5 +1,6 @@
 import React from 'react';
 
+import SmoothScroll from './components/SmoothScroll.jsx';
 import Grain from './components/Grain.jsx';
 import Intro from './components/Intro.jsx';
 import ScrollProgress from './components/ScrollProgress.jsx';
@@ -20,6 +21,7 @@ import Magnetic from './components/Magnetic.jsx';
 export default function App() {
   return (
     <>
+      <SmoothScroll />
       <Grain />
       <Intro />
       <ScrollProgress />
