@@ -18,7 +18,7 @@ export function initTechNetwork(canvas) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ===== TUNABLES ===== */
-  const R = 3.6;          // sphere radius (bigger = bigger ball)
+  const R = 3.2;          // sphere radius (bigger = bigger ball)
   const GROUP_Y = -0.3;   // move ball DOWN -> negative
   const LINEWIDTH = 2.5;  // connecting-line thickness (px)
   const SPREAD = 0.95;    // node spacing

@@ -1,10 +1,19 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { scrollToTarget } from '../lib/scrollTo.js';
 
-/* Fixed top navigation. Anchors match the section ids and order of the original.
-   Clicks route through scrollToTarget so in-page jumps share Lenis's inertia. */
+/* Fixed top navigation. On the home page the links smooth-scroll to a section;
+   from a detail page they navigate home first, passing the target section in
+   router state so Home scrolls to it once it has entered. */
 export default function TopNav() {
-  const go = (e, href) => { e.preventDefault(); scrollToTarget(href); };
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const go = (e, href) => {
+    e.preventDefault();
+    if (pathname === '/') scrollToTarget(href);
+    else navigate('/', { state: { scrollTo: href } });
+  };
 
   return (
     <header className="topnav">
