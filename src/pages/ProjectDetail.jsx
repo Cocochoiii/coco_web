@@ -5,6 +5,8 @@ import { getProject, getDetail, prevNextProject, PROJECTS, SPLINE } from '../dat
 import TechRing from '../components/TechRing.jsx';
 import SplineScene from '../components/SplineScene.jsx';
 import ImpactCoverflow from '../components/ImpactCoverflow.jsx';
+import CaseFX from '../components/CaseFX.jsx';
+import '../styles/case-fx.css';
 
 const EASE = [0.2, 0.7, 0.2, 1];
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } } };
@@ -12,13 +14,32 @@ const rise = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transiti
 const drawX = { hidden: { scaleX: 0, opacity: 0 }, show: { scaleX: 1, opacity: 1, transition: { duration: 0.6, ease: EASE } } };
 const inView = { once: true, margin: '-12% 0px' };
 
-function SectionHead({ children }) {
+/* per-project accent (presentational; text stays in content.js) — for the prev/next preview */
+const ACCENT = {
+  'aws-backbone': '#8FB4FF',
+  mars: '#FF9EC4',
+  ubiwell: '#B9A6FF',
+  audi: '#9EC0FF',
+  wpp: '#D3B6FF',
+  'rag-news': '#FFB0D0',
+};
+const accentOf = (slug) => ACCENT[slug] || '#B9A6FF';
+
+/* numbered sections — feeds both the headers (01/02/03) and the right filament */
+const SECTIONS = [
+  { id: 'cs-overview', label: 'Overview', n: '01' },
+  { id: 'cs-stack', label: 'Stack', n: '02' },
+  { id: 'cs-impact', label: 'Impact', n: '03' },
+];
+
+function SectionHead({ children, n }) {
   return (
     <motion.h2 className="cs-h2"
       initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
       viewport={inView} transition={{ duration: 0.5, ease: EASE }}>
       <motion.span className="cs-h2__rule" variants={drawX} initial="hidden" whileInView="show"
         viewport={inView} style={{ transformOrigin: 'left' }} />
+      {n && <span className="cs-h2__n">{n}</span>}
       {children}
     </motion.h2>
   );
@@ -57,6 +78,7 @@ export default function ProjectDetail() {
           <div className="wrap">
             {/* decorative layer (sits behind the content) */}
             <div className="cs-glow" aria-hidden="true" />
+            <CaseFX sections={SECTIONS} />
             <motion.div className="cs-index" aria-hidden="true"
               initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}>
@@ -91,38 +113,51 @@ export default function ProjectDetail() {
             )}
 
             {d && d.overview && (
-              <motion.p className="cs-overview"
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={inView} transition={{ duration: 0.6, ease: EASE }}>
-                {d.overview}
-              </motion.p>
+              <section className="cs-block" id="cs-overview">
+                <SectionHead n="01">Overview</SectionHead>
+                <motion.p className="cs-overview"
+                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={inView} transition={{ duration: 0.6, ease: EASE }}>
+                  {d.overview}
+                </motion.p>
+              </section>
             )}
 
             {d && d.stack && (
-              <section className="cs-block">
-                <SectionHead>Stack</SectionHead>
+              <section className="cs-block" id="cs-stack">
+                <SectionHead n="02">Stack</SectionHead>
                 <TechRing items={ringItems} label={`Technologies used at ${p.title}`} />
               </section>
             )}
 
             {d && d.highlights && (
-              <section className="cs-block">
-                <SectionHead>Impact</SectionHead>
+              <section className="cs-block" id="cs-impact">
+                <SectionHead n="03">Impact</SectionHead>
                 <ImpactCoverflow highlights={d.highlights} />
               </section>
             )}
 
             <nav className="cs-nav">
               {prev && (
-                <Link to={`/work/${prev.slug}`} className="cs-nav__link cs-nav__prev">
-                  <span className="cs-nav__dir"><span className="cs-nav__arrow">←</span> Previous</span>
-                  <span className="cs-nav__title">{prev.title}</span>
+                <Link to={`/work/${prev.slug}`} className="cs-nav__link cs-nav__prev" style={{ '--accent': accentOf(prev.slug) }}>
+                  <span className="cs-nav__glow" aria-hidden="true" />
+                  <span className="cs-nav__accent" aria-hidden="true" />
+                  <span className="cs-nav__inner">
+                    <span className="cs-nav__dir"><span className="cs-nav__arrow">←</span> Previous</span>
+                    <span className="cs-nav__title">{prev.title}</span>
+                    <span className="cs-nav__blurb">{prev.blurb}</span>
+                  </span>
                 </Link>
               )}
               {next && (
-                <Link to={`/work/${next.slug}`} className="cs-nav__link cs-nav__next">
-                  <span className="cs-nav__dir">Next <span className="cs-nav__arrow">→</span></span>
-                  <span className="cs-nav__title">{next.title}</span>
+                <Link to={`/work/${next.slug}`} className="cs-nav__link cs-nav__next" style={{ '--accent': accentOf(next.slug) }}>
+                  <span className="cs-nav__glow" aria-hidden="true" />
+                  <span className="cs-nav__accent" aria-hidden="true" />
+                  <span className="cs-nav__inner">
+                    <span className="cs-nav__dir">Next <span className="cs-nav__arrow">→</span></span>
+                    <span className="cs-nav__title">{next.title}</span>
+                    <span className="cs-nav__blurb">{next.blurb}</span>
+                  </span>
                 </Link>
               )}
             </nav>
