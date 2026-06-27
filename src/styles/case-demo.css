@@ -1,0 +1,65 @@
+/* ============================================================
+   case-demo.css — framed 3D demo on each case-study page
+   Same gradient-border card language as the rest of the site; the canvas
+   fills it and a short caption sits top-left (accent dot, no numbers).
+   ============================================================ */
+.case-demo {
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 58vh, 640px);
+  margin-top: clamp(16px, 3vh, 30px);
+  border: 1px solid transparent;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(24, 18, 34, 0.82), rgba(24, 18, 34, 0.82)) padding-box,
+    linear-gradient(135deg, rgba(185, 166, 255, 0.5), rgba(255, 158, 196, 0.32)) border-box;
+  box-shadow: 0 26px 60px -34px rgba(143, 180, 255, 0.3);
+}
+
+.case-demo__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: pan-y;   /* never trap vertical scroll on touch */
+  /* soften the canvas edges into the card (esp. with bloom's opaque backdrop) */
+  -webkit-mask-image: radial-gradient(125% 125% at 50% 46%, #000 66%, transparent 100%);
+  mask-image: radial-gradient(125% 125% at 50% 46%, #000 66%, transparent 100%);
+}
+
+.case-demo__cap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  margin: 0;
+  max-width: 34ch;
+  padding: 15px 20px 26px 16px;
+  pointer-events: none;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.3px;
+  line-height: 1.55;
+  color: var(--ink-dim, #C7BDD8);
+  background: radial-gradient(125% 135% at 0% 0%,
+      rgba(12, 10, 18, 0.82) 0%, rgba(12, 10, 18, 0.45) 42%, rgba(12, 10, 18, 0) 76%);
+}
+.case-demo__cap::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--accent, #B9A6FF);
+  box-shadow: 0 0 10px var(--accent, #B9A6FF);
+  vertical-align: middle;
+}
+
+@media (max-width: 560px) {
+  .case-demo { height: clamp(340px, 50vh, 460px); }
+  .case-demo__cap { font-size: 11px; padding: 12px 14px 20px 14px; max-width: 28ch; }
+}

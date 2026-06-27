@@ -5,6 +5,7 @@ import { getProject, getDetail, prevNextProject, PROJECTS, SPLINE } from '../dat
 import TechRing from '../components/TechRing.jsx';
 import SplineScene from '../components/SplineScene.jsx';
 import ImpactCoverflow from '../components/ImpactCoverflow.jsx';
+import CaseDemo, { CASE_DEMO_SLUGS } from '../components/CaseDemo.jsx';
 import CaseFX from '../components/CaseFX.jsx';
 import CaseBackground from '../components/CaseBackground.jsx';
 import '../styles/case-fx.css';
@@ -45,6 +46,7 @@ const SECTIONS = [
   { id: 'cs-overview', label: 'Overview', n: '01' },
   { id: 'cs-stack', label: 'Stack', n: '02' },
   { id: 'cs-impact', label: 'Impact', n: '03' },
+  { id: 'cs-demo', label: 'Demo', n: '04' },
 ];
 
 function SectionHead({ children, n }) {
@@ -150,6 +152,13 @@ export default function ProjectDetail() {
               <section className="cs-block" id="cs-impact">
                 <SectionHead n="03">Impact</SectionHead>
                 <ImpactCoverflow highlights={d.highlights} />
+              </section>
+            )}
+
+            {d && CASE_DEMO_SLUGS.has(slug) && (
+              <section className="cs-block" id="cs-demo">
+                <SectionHead n="04">Demo</SectionHead>
+                <CaseDemo slug={slug} accent={accentOf(slug)} />
               </section>
             )}
 

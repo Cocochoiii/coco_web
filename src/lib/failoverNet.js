@@ -64,6 +64,13 @@ const LINKS = [
   { a: 3, b: 10, w: 90, cap: 40 },   // eu-west-1 — af-south-1
   { a: 0, b: 3, w: 120, cap: 30 },   // us-west-2 — eu-west-1 (polar backup)
   { a: 5, b: 8, w: 85, cap: 30 },    // ap-south-1 — ap-southeast-2 (APAC redundancy)
+  // --- added: more backbone links (extra redundancy / reroute options) ---
+  { a: 7, b: 8, w: 85, cap: 40 },    // ap-northeast-1 — ap-southeast-2 (Tokyo ↔ Sydney)
+  { a: 6, b: 9, w: 75, cap: 50 },    // ap-southeast-1 — me-central-1 (Singapore ↔ Middle East)
+  { a: 3, b: 5, w: 95, cap: 40 },    // eu-west-1 — ap-south-1 (Europe ↔ India shortcut)
+  { a: 5, b: 10, w: 88, cap: 30 },   // ap-south-1 — af-south-1 (Mumbai ↔ Cape Town)
+  { a: 0, b: 8, w: 105, cap: 40 },   // us-west-2 — ap-southeast-2 (transpacific south)
+  { a: 4, b: 10, w: 80, cap: 40 },   // eu-central-1 — af-south-1 (Europe ↔ Africa)
 ];
 const FLOWS = [
   { s: 0, d: 6, bw: 18 },   // us-west-2 → ap-southeast-1
@@ -152,9 +159,9 @@ export function initFailoverNet(canvas, opts = {}) {
   const NODE_Y = 0.58;        // nodes float this high over the grid floor (depth)
   const Z_STRETCH = 3.5;      // spread the topology north-south so it fills a tall box (extends down)
   const X_STRETCH = 1.6;      // spread the topology east-west (extends left + right)
-  const FIT_PAD = 0.6;       // camera framing margin (smaller = network fills more)
+  const FIT_PAD = 0.6;        // camera framing margin (smaller = network fills more)
   const SHIFT_X = -4.0;       // pan the network: + = right, − = left
-  const SHIFT_Y = -1.0;          // pan the network: + = up,   − = down
+  const SHIFT_Y = -1.0;       // pan the network: + = up,   − = down
   /* ==================== */
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
