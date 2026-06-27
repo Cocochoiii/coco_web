@@ -11,7 +11,15 @@
   gap: clamp(20px, 4vw, 56px);
   width: 100%;
 }
-.contact__hero .contact__lede { margin: 0; flex: 1 1 auto; }
+/* the lede: vertically centred next to the character.
+   `top` nudges JUST this text down (positive = down, negative = up) without
+   moving the character or fighting the reveal animation. */
+.contact__hero .contact__lede {
+  margin: 0;
+  flex: 1 1 auto;
+  position: relative;
+  top: clamp(24px, 8vh, 120px);
+}
 
 .contact__fig {
   position: relative;
@@ -37,7 +45,7 @@
        translate()  → nudge it (x%, y%) — right/down positive
        origin       → grows up-right from bottom-left, so it stays grounded and
                       never spills over the lede on the left */
-  transform: scale(1.4) translate(-25%, 30%);
+  transform: scale(1.1) translate(-15%, 30%);
   transform-origin: left bottom;
   will-change: transform;
 }
@@ -49,12 +57,13 @@
 /* tablet: still bigger than before, just a touch reined in */
 @media (max-width: 980px) {
   .contact__fig { width: clamp(340px, 52%, 540px); height: clamp(440px, 60vh, 680px); }
-  .contact__fig .scene { transform: scale(1.0) translate(2%, 0%); }
+  .contact__fig .scene { transform: scale(1.12) translate(2%, 0%); }
 }
 /* phones: drop the character (keeps the closing copy clean + one less WebGL) */
 @media (max-width: 760px) {
   .contact__hero { display: block; }
   .contact__fig { display: none; }
+  .contact__hero .contact__lede { top: 0; }  /* stacked layout — no vertical offset needed */
 }
 
 @media (prefers-reduced-motion: reduce) {
