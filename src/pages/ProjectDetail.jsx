@@ -6,6 +6,7 @@ import TechRing from '../components/TechRing.jsx';
 import SplineScene from '../components/SplineScene.jsx';
 import ImpactCoverflow from '../components/ImpactCoverflow.jsx';
 import CaseFX from '../components/CaseFX.jsx';
+import CaseBackground from '../components/CaseBackground.jsx';
 import '../styles/case-fx.css';
 
 const EASE = [0.2, 0.7, 0.2, 1];
@@ -24,6 +25,20 @@ const ACCENT = {
   'rag-news': '#FFB0D0',
 };
 const accentOf = (slug) => ACCENT[slug] || '#B9A6FF';
+
+/* full-bleed 3D backdrop per page. 'globe' = the real AWS-backbone motif;
+   the rest fall back to the generic 'field' until each gets its bespoke one
+   (mars: socket swarm · ubiwell: biosignal stream · audi: pipeline DAG ·
+    wpp: identity-graph merge · rag-news: embedding point-cloud). */
+const MOTIF = {
+  'aws-backbone': 'globe',
+  mars: 'mars',
+  ubiwell: 'ubiwell',
+  audi: 'audi',
+  wpp: 'wpp',
+  'rag-news': 'rag',
+};
+const motifOf = (slug) => MOTIF[slug] || 'field';
 
 /* numbered sections — feeds both the headers (01/02/03) and the right filament */
 const SECTIONS = [
@@ -75,6 +90,7 @@ export default function ProjectDetail() {
     <div>
       <main>
         <article className="section cs">
+          <CaseBackground motif={motifOf(slug)} accent={accentOf(slug)} />
           <div className="wrap">
             {/* decorative layer (sits behind the content) */}
             <div className="cs-glow" aria-hidden="true" />

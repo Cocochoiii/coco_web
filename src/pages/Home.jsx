@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
 import Backbone from '../components/Backbone.jsx';
+import LinkSplice from '../components/LinkSplice.jsx';
 import Hero from '../components/Hero.jsx';
 import TechStack from '../components/TechStack.jsx';
 import WhatIBuild from '../components/WhatIBuild.jsx';
@@ -40,6 +41,7 @@ export default function Home() {
     <motion.div variants={pageV} initial="initial" animate="animate" exit="exit">
       <Backbone />
       <main>
+        <LinkSplice />
         <Hero />
         <TechStack />
         <WhatIBuild />
