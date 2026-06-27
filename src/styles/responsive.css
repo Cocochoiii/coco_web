@@ -1,0 +1,41 @@
+/* ============================================================
+   responsive.css — mobile / touch adaptation
+   ------------------------------------------------------------
+   Loaded AFTER index.css so these targeted rules win at equal
+   specificity, WITHOUT editing the hand-tuned index.css.
+
+   index.css already handles the layout reflow (single-column
+   #home / #build / #about, the metric grids, the chat panel, the
+   case pages, coverflow -> single card, cs-nav -> single column,
+   etc.). This file only closes the remaining *touch* gaps so every
+   interaction works on a phone while the visuals and behaviour
+   stay the same.
+   ============================================================ */
+
+/* 1) Tech-stack sphere — let a vertical swipe SCROLL THE PAGE while a
+   horizontal drag still rotates it (this mirrors the case-page tech ring,
+   which already uses pan-y). Without this, the sphere swallowed vertical
+   swipes and the page couldn't be scrolled past it on touch. Scroll-to-zoom
+   still works because zoom is driven by page-scroll progress. Desktop mice
+   are unaffected by touch-action. */
+#stack #net { touch-action: pan-y; }
+
+/* 2) Decorative 3D characters must not trap the scroll on touch screens.
+   Making them non-interactive lets swipes pass straight through to the page;
+   the scenes still render and play their idle animation — only drag-to-orbit
+   (a non-essential, pointer-only nicety) is dropped on phones. About was
+   already handled in index.css; this adds the Hero and What-I-build figures.
+   The case-study hero character is display:none below 981px, so no rule here. */
+@media (max-width: 980px) {
+  #home .scene-box .scene,
+  #build .figcol .fig .scene,
+  #about .about-fig .scene { pointer-events: none; }
+}
+
+/* 3) Stop iOS Safari from auto-zooming the page when the chat field gains
+   focus (it zooms any <input> whose font-size is below 16px). Applies to both
+   the inline "Ask me anything" panel and the floating widget (shared class),
+   so typing on a phone no longer jerks the viewport. */
+@media (max-width: 980px) {
+  .chat__input input { font-size: 16px; }
+}

@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { LINKS } from '../data/content.js';
+import { LINKS, SPLINE } from '../data/content.js';
+import SplineScene from './SplineScene.jsx';
 import useReveal from '../hooks/useReveal.js';
+import '../styles/contact-fig.css';
 
 const ClipboardIcon = () => (
   <span className="ccard__icon" aria-hidden="true">
@@ -87,10 +89,15 @@ export default function Contact() {
     <footer className="section stack-sec" id="contact" aria-label="Contact">
       <div className="wrap">
         <div className="eyebrow">Contact</div>
-        <p className="contact__lede reveal" ref={ledeRef}>
-          Let's build something that stays up under load.{' '}
-          <a href={`mailto:${LINKS.email}`}>Say hello <span className="arrow">→</span></a>
-        </p>
+        <div className="contact__hero">
+          <p className="contact__lede reveal" ref={ledeRef}>
+            Let's build something that stays up under load.{' '}
+            <a href={`mailto:${LINKS.email}`}>Say hello <span className="arrow">→</span></a>
+          </p>
+          <div className="contact__fig" aria-hidden="true">
+            <SplineScene url={SPLINE.about} />
+          </div>
+        </div>
         <div className="contact__grid reveal" ref={gridRef}>
           <CopyCard label="Email" value={LINKS.email} ariaLabel="Copy email address" />
           <CopyCard label="Phone" value={LINKS.phone} ariaLabel="Copy phone number" />

@@ -1,0 +1,10 @@
+/* ============================================================
+   spline-badge.css
+   ------------------------------------------------------------
+   The Spline "Built with Spline" badge is removed at the source (inside the
+   viewer's shadow DOM) in SplineScene.jsx. The old `.logo-cover` was an opaque
+   fallback patch, but a solid block can't match the translucent, aura-lit areas
+   behind a transparent Spline scene — so it showed as an obvious rectangle.
+   With the badge gone at the source, the patch is no longer needed.
+   ============================================================ */
+.logo-cover { display: none !important; }

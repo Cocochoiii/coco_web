@@ -1,0 +1,82 @@
+/* ============================================================
+   home-fx.css — homepage "living network" touches
+   Kept OUT of index.css so the hand-tuned styles stay untouched.
+     1) Backbone trunk  — data packets flow down the established line;
+                          a soft glow when the trunk completes at the end.
+     2) Section seams    — a very faint splice line + a dot that flows from
+                          the previous section into the next, on scroll.
+   Both are desktop touches (hidden <=980px, matching the backbone) and
+   freeze under prefers-reduced-motion.
+   ============================================================ */
+
+/* ---- 1. backbone: flowing packets + finish glow ---- */
+.backbone__flow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  transform: translate(-50%, 0);
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, #ffffff, rgba(185, 166, 255, 0.6) 55%, transparent 72%);
+  will-change: transform, opacity;
+}
+.backbone--complete .backbone__fill { box-shadow: 0 0 12px rgba(185, 166, 255, 0.6); }
+
+/* ---- 2. section link-splice ---- */
+.splices {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.splice { position: absolute; left: 50%; width: 0; height: 0; }
+.splice__line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  width: 1px;
+  height: 100px;
+  border-radius: 2px;
+  opacity: 10;
+  transition: opacity 0.5s ease;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(185, 166, 255, 0) 8%,
+    rgba(185, 166, 255, 0.3) 50%,
+    rgba(255, 158, 196, 0) 92%,
+    transparent 100%);
+}
+.splice__dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  background: #fff;
+  box-shadow: 0 0 8px 1px rgba(185, 166, 255, 0.8);
+}
+.splice.is-live .splice__line { opacity: 0.6; }
+.splice.is-live .splice__dot { animation: spliceFlow 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
+@keyframes spliceFlow {
+  0% { opacity: 0; transform: translate(-50%, -31px); }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, 31px); }
+}
+
+@media (max-width: 980px) { .splices { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .backbone__flow { display: none; }
+  .splice__dot { display: none; }
+  .splice__line { opacity: 0.4; }
+}

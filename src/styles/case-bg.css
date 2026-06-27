@@ -1,0 +1,58 @@
+/* ============================================================
+   case-bg.css — full-bleed 3D backdrop for case-study pages
+   ------------------------------------------------------------
+   The canvas fills the viewport and sits BEHIND the case content
+   (`.cs .wrap` is z-index:1). pointer-events are off so it never
+   blocks clicks/scroll. Legibility = three damping layers you can
+   tune with the CSS vars below:
+     --casebg-opacity : overall visibility of the 3D layer
+     --casebg-blur    : depth-of-field softness (0 = crisp)
+     --casebg-scrim   : darkness directly behind the reading column
+   ============================================================ */
+.case-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;            /* below .cs .wrap content (z-index:1), above the page aurora */
+  pointer-events: none;
+  /* ---- tunables ---- */
+  --casebg-opacity: 0.74;
+  --casebg-blur: 1.1px;
+  --casebg-scrim: 0.7;
+}
+
+.case-bg__canvas {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  opacity: var(--casebg-opacity);
+  filter: blur(var(--casebg-blur));
+  will-change: opacity;
+}
+
+/* keeps text readable: darkest down the centre reading column, opening up
+   toward the edges where the motif is free to be big and bright */
+.case-bg__scrim {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(125% 92% at 50% 42%,
+      rgba(12, 10, 18, var(--casebg-scrim)) 0%,
+      rgba(12, 10, 18, calc(var(--casebg-scrim) * 0.62)) 46%,
+      rgba(12, 10, 18, 0.12) 100%),
+    linear-gradient(180deg,
+      rgba(12, 10, 18, 0.55) 0%,
+      rgba(12, 10, 18, 0) 16%,
+      rgba(12, 10, 18, 0) 82%,
+      rgba(12, 10, 18, 0.66) 100%);
+}
+
+/* phones: dimmer + a touch more scrim (smaller gutters, text is closer in) */
+@media (max-width: 980px) {
+  .case-bg { --casebg-opacity: 0.6; --casebg-scrim: 0.78; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-bg__canvas { filter: none; }
+}

@@ -1,7 +1,6 @@
-import React from 'react';
-import { ABOUT, SPLINE } from '../data/content.js';
-import SplineScene from './SplineScene.jsx';
-import Sparks, { SPARKS_ABOUT } from './Sparks.jsx';
+import React, { useLayoutEffect } from 'react';
+import { ABOUT } from '../data/content.js';
+import FailoverDemo from './FailoverDemo.jsx';
 import useReveal from '../hooks/useReveal.js';
 
 /* #about — figure on the left, the story on the right. The paragraph keeps its
@@ -10,13 +9,33 @@ export default function About() {
   const figRef = useReveal();
   const textRef = useReveal();
 
+  // Give the demo box a *definite* height equal to the text column so its
+  // absolutely-positioned canvas has real pixels to fill (without this it
+  // collapses to 0 and the 3D demo never shows). Desktop only — on mobile the
+  // CSS height (48vh) applies, so we clear the inline value there.
+  useLayoutEffect(() => {
+    const fig = figRef.current;
+    const text = textRef.current;
+    if (!fig || !text) return undefined;
+    const sync = () => {
+      if (window.innerWidth <= 980) { fig.style.height = ''; return; }
+      fig.style.height = `${Math.round(text.offsetHeight)}px`;
+    };
+    sync();
+    let ro = null;
+    if ('ResizeObserver' in window) { ro = new ResizeObserver(sync); ro.observe(text); }
+    window.addEventListener('resize', sync);
+    // fonts can reflow the text after first paint
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync).catch(() => {});
+    return () => { if (ro) ro.disconnect(); window.removeEventListener('resize', sync); };
+  }, [figRef, textRef]);
+
   return (
     <section className="section" id="about" aria-label="About me">
       <div className="grid">
-        <div className="about-fig reveal r-scale" ref={figRef}>
+        <div className="about-fig is-demo reveal r-scale" ref={figRef}>
           <div className="aura" aria-hidden="true" />
-          <SplineScene url={SPLINE.about} />
-          <Sparks items={SPARKS_ABOUT} />
+          <FailoverDemo />
         </div>
 
         <div className="about-text reveal r-right" ref={textRef}>

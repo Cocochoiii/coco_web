@@ -1,0 +1,100 @@
+/* ============================================================
+   failover.css — interactive backbone failover demo (About left column)
+   Separate from index.css. Direction C: the demo is a pure 3D scene — every
+   readout (telemetry console, tooltips, reconvergence time) lives inside the
+   canvas. There is no DOM panel anymore, so this file only sizes the canvas
+   and keeps the demo inside the existing #about figure box.
+   ============================================================ */
+
+/* the demo box gets an explicit pixel height in JS (= the About text block
+   height) so its absolutely-positioned canvas has a real size to fill; strip
+   the old fixed-height / min-height / float so JS can drive it and the top
+   lines up with the "ABOUT ME" eyebrow. it also becomes a framed figure —
+   same gradient-border card treatment as the rest of the site. */
+#about .about-fig.is-demo {
+  animation: none;
+  min-height: 0;
+  margin-top: 0;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+          linear-gradient(rgba(24, 18, 34, 0.82), rgba(24, 18, 34, 0.82)) padding-box,
+          linear-gradient(135deg, rgba(185, 166, 255, 0.5), rgba(255, 158, 196, 0.32)) border-box;
+  box-shadow: 0 26px 60px -34px rgba(143, 180, 255, 0.3);
+}
+
+.failover { position: absolute; inset: 0; z-index: 1; }
+.failover__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+  touch-action: pan-y;   /* vertical swipe scrolls the page; tap cuts a link / picks a node */
+}
+
+/* screen-reader-only live region (keeps the demo accessible with zero visible 2D) */
+.failover__sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* titled caption: "Demo" + a one-line how-to, overlaid top-left.
+   pointer-events:none so every click still reaches the canvas underneath. */
+.failover__cap {
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 3;
+  max-width: 34ch;
+  padding: 16px 20px 28px 18px;
+  pointer-events: none;
+  background: radial-gradient(130% 140% at 0% 0%,
+  rgba(12, 10, 18, 0.82) 0%, rgba(12, 10, 18, 0.46) 42%, rgba(12, 10, 18, 0) 76%);
+}
+.failover__cap h3 {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 5px 0;
+  font-family: 'Bricolage Grotesque', ui-sans-serif, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  color: var(--ink, #F3EEFA);
+}
+.failover__cap h3::before {
+  content: "";
+  width: 7px; height: 7px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--lav, #B9A6FF), var(--pink, #FF9EC4));
+  box-shadow: 0 0 10px rgba(185, 166, 255, 0.6);
+}
+.failover__cap p {
+  margin: 0;
+  font-family: 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink-dim, #C7BDD8);
+}
+.failover__cap .k { color: var(--lav, #B9A6FF); font-weight: 600; }
+
+@media (max-width: 560px) {
+  .failover__cap { padding: 12px 16px 22px 14px; max-width: 30ch; }
+  .failover__cap h3 { font-size: 15px; }
+  .failover__cap p { font-size: 11px; }
+}
+
+/* ============================================================
+   About copy ↔ framed demo — keep them from touching.
+   The demo box now has a visible border. On desktop the About text's reveal
+   used to over-shoot to the LEFT (index.css: translateX(clamp(-88px,-4vw,-28px)))
+   and tuck under that border. Higher-specificity override here settles the
+   text at its own column (no leftward over-shoot) + a small gutter, so the
+   heading never crosses the frame. index.css is left untouched.
+   ============================================================ */
+@media (min-width: 981px) {
+  #about .grid .about-text.in { transform: translateX(0); }
+  #about .grid .about-text { padding-left: clamp(6px, 0.8vw, 16px); }
+}
