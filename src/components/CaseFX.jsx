@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const prefersReduce = () =>
   typeof window !== 'undefined' && window.matchMedia
@@ -8,36 +8,16 @@ const canHover = () =>
   && window.matchMedia('(hover: hover)').matches;
 
 /**
- * Atmosphere + wayfinding for the case page. Renders fixed background layers
- * (cursor glow, drifting blueprint grid, scan band) plus a right-side progress
- * filament whose nodes map to the numbered sections (scroll-spy + click-to-jump).
- * Also adds a subtle cursor parallax to the prev/next cards. All additive — no
- * dependency on index.css.
+ * Wayfinding for the case page: a right-side progress filament whose nodes map to
+ * the numbered sections (scroll-spy + click-to-jump), plus a subtle cursor
+ * parallax on the prev/next cards. All additive — no dependency on index.css.
  */
 export default function CaseFX({ sections = [] }) {
   const reduce = prefersReduce();
-  const glowRef = useRef(null);
-  const gridRef = useRef(null);
   const [fill, setFill] = useState(0);
   const [active, setActive] = useState(sections[0] ? sections[0].id : null);
 
-  // 1) cursor-follow glow (hover devices only)
-  useEffect(() => {
-    if (reduce || !canHover()) return undefined;
-    let raf = 0;
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight * 0.4;
-    const apply = () => {
-      raf = 0;
-      const el = glowRef.current;
-      if (el) { el.style.setProperty('--mx', mx + 'px'); el.style.setProperty('--my', my + 'px'); }
-    };
-    const onMove = (e) => { mx = e.clientX; my = e.clientY; if (!raf) raf = requestAnimationFrame(apply); };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); };
-  }, [reduce]);
-
-  // 2) scroll -> grid parallax + filament fill height
+  // scroll -> filament fill height
   useEffect(() => {
     let raf = 0;
     const apply = () => {
@@ -45,17 +25,15 @@ export default function CaseFX({ sections = [] }) {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? (window.scrollY || window.pageYOffset || 0) / max : 0;
       setFill(Math.max(0, Math.min(1, p)));
-      const g = gridRef.current;
-      if (g && !reduce) g.style.setProperty('--cs-par', ((window.scrollY || 0) * 0.04).toFixed(1) + 'px');
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     apply();
     return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); cancelAnimationFrame(raf); };
-  }, [reduce]);
+  }, []);
 
-  // 3) scroll-spy: light the section currently most in view
+  // scroll-spy: light the section currently most in view
   useEffect(() => {
     if (!sections.length || !('IntersectionObserver' in window)) return undefined;
     const els = sections.map((s) => document.getElementById(s.id)).filter(Boolean);
@@ -69,7 +47,7 @@ export default function CaseFX({ sections = [] }) {
     return () => io.disconnect();
   }, [sections]);
 
-  // 5) prev/next cards: gentle cursor parallax
+  // prev/next cards: gentle cursor parallax
   useEffect(() => {
     if (reduce || !canHover()) return undefined;
     const links = Array.from(document.querySelectorAll('.cs-nav__link'));
@@ -91,9 +69,6 @@ export default function CaseFX({ sections = [] }) {
 
   return (
     <>
-      <div className="cs-cursor-glow" ref={glowRef} aria-hidden="true" />
-      <div className="cs-grid-shift" ref={gridRef} aria-hidden="true" />
-      <div className="cs-scan" aria-hidden="true" />
       {sections.length > 0 && (
         <nav className="cs-rail" aria-label="On this page">
           <span className="cs-rail__track" aria-hidden="true" />

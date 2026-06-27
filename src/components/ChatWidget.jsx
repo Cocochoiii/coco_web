@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Chat from './Chat.jsx';
-import { SUGGEST_MINI } from '../data/content.js';
+import { STARTERS } from '../data/content.js';
 
-const INTRO =
-  "Hi! I\u2019m Coco\u2019s assistant. Ask me about her work, projects, or how to reach her.";
+const INTRO = "Hi \u2014 I\u2019m Coco\u2019s assistant. Ask me anything about her.";
 
 /* Floating assistant. Opens a popup that reuses the shared Chat engine.
    - Escape and outside clicks close it (the fab/pop stop propagation).
@@ -69,7 +68,7 @@ export default function ChatWidget() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
           </button>
         </div>
-        <Chat intro={INTRO} initialSuggest={SUGGEST_MINI} active={open} />
+        <Chat intro={INTRO} initialSuggest={STARTERS} active={open} />
       </aside>
     </>
   );

@@ -18,10 +18,10 @@ export function initTechNetwork(canvas) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ===== TUNABLES ===== */
-  const R = 3.2;          // sphere radius (bigger = bigger ball)
-  const GROUP_Y = -0.3;   // move ball DOWN -> negative
-  const LINEWIDTH = 2.5;  // connecting-line thickness (px)
-  const SPREAD = 0.95;    // node spacing
+  const R = 3.6;          // sphere radius (bigger = bigger ball)
+  const GROUP_Y = 0.0;   // move ball DOWN -> negative
+  const LINEWIDTH = 3.5;  // connecting-line thickness (px)
+  const SPREAD = 1.95;    // node spacing
 
   /* ---- data ---- */
   function tierOf(n) { return TIER1[n] ? 1 : (TIER2[n] ? 2 : 3); }
@@ -271,7 +271,7 @@ export function initTechNetwork(canvas) {
     for (k = 0; k < N; k++) {
       nd = nodes[k];
       nd.lab.material.opacity = nd._blk ? 0 : nd._des;
-      nd.dot.material.opacity = nd._hot ? 1 : (hovering ? (nd._on ? (0.5 + 0.5 * nd._depth) : 0.08) : (0.3 + 0.7 * nd._depth));
+      nd.dot.material.opacity = nd._hot ? 1 : (hovering ? (nd._on ? (0.5 + 0.5 * nd._depth) : 0.08) : (0.5 + 0.7 * nd._depth));
       nd.target = nd._hot ? 1.6 : (nd._on && hovering ? 1.18 : 1);
       nd.cur += (nd.target - nd.cur) * 0.18;
       const lh = nd.lab.userData.baseH * (nd._hot ? 1.3 : 1);

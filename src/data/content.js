@@ -233,9 +233,18 @@ export const THINK = [
   'Checking my notes…',
 ];
 
-/* The inline panel starts with the full chip set; the floating widget uses a shorter one. */
-export const SUGGEST_FULL = ['who', 'work', 'built', 'stack', 'study', 'site', 'drives', 'teams', 'disagree', 'failed', 'leadership', 'amazon', 'audi', 'mars', 'wpp', 'rag', 'research', 'strength', 'goals', 'reach'];
-export const SUGGEST_MINI = ['who', 'work', 'built', 'amazon', 'audi', 'rag', 'stack', 'research', 'goals', 'reach'];
+/* A real conversation opens with a few inviting starters, not a wall of buttons.
+   Everything else surfaces as contextual follow-ups after each answer. */
+export const STARTERS = ['who', 'built', 'work', 'reach'];
+
+/* Rotating input hints — signal "ask me anything" and nudge topics, no button wall. */
+export const PLACEHOLDERS = [
+  'Ask about her work at AWS…',
+  'Tell me about the news-RAG project…',
+  "What's her tech stack?…",
+  'Is she open to Summer 2026?…',
+  'How do I reach Coco?…',
+];
 
 /* ============================================================
    Tech Stack graph data (categories + colors + tier weighting)

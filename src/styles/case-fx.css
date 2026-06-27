@@ -4,43 +4,21 @@
    so your hand-tuned index.css is never touched.
 
    Contents:
-     1) cursor-follow glow            (.cs-cursor-glow)
-     2) blueprint parallax + scan     (.cs-grid-shift, .cs-scan)
-     3) section numbers 01/02/03      (.cs-h2__n)
-     4) right-side progress filament  (.cs-rail*)
-     5) prev/next hover preview       (.cs-nav__inner/__blurb/__glow/__accent)
+     1) section numbers 01/02/03      (.cs-h2__n)
+     2) right-side progress filament  (.cs-rail*)
+     3) prev/next hover preview       (.cs-nav__inner/__blurb/__glow/__accent)
 
    QUICK TUNABLES are flagged with  <<<
    ============================================================ */
 
-/* keep the case content above the fixed atmosphere layers */
+/* keep the case content above the fixed filament */
 .cs .wrap{position:relative;z-index:1}
 
-/* ---------- 1) cursor-follow glow ---------- */
-.cs-cursor-glow{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;
-  background:radial-gradient(440px 440px at var(--mx,50%) var(--my,38%), rgba(185,166,255,.12), transparent 60%); /* <<< size .12=strength */
-  animation:csGlowIn 1s ease .2s forwards;will-change:background}
-@keyframes csGlowIn{to{opacity:1}}
-@media (hover:none){ .cs-cursor-glow{display:none} }
-
-/* ---------- 2) blueprint parallax + scan line ---------- */
-/* a faint COARSE grid that drifts on scroll (parallax) over your fine static grid */
-.cs-grid-shift{position:fixed;inset:-12% 0;z-index:0;pointer-events:none;opacity:.6; /* <<< overall strength */
-  background-image:
-    repeating-linear-gradient(0deg, transparent 0 119px, rgba(185,166,255,.05) 119px 120px),
-    repeating-linear-gradient(90deg, transparent 0 119px, rgba(143,180,255,.045) 119px 120px);
-  transform:translateY(var(--cs-par,0px));will-change:transform}
-/* a soft band sweeping down — link-monitor / oscilloscope feel */
-.cs-scan{position:fixed;left:0;right:0;top:0;height:160px;z-index:0;pointer-events:none;opacity:.55;
-  background:linear-gradient(180deg, transparent, rgba(185,166,255,.06) 50%, transparent);
-  animation:csScan 9s linear infinite} /* <<< 9s = speed */
-@keyframes csScan{0%{transform:translateY(-180px)}100%{transform:translateY(100vh)}}
-
-/* ---------- 3) section numbers 01/02/03 ---------- */
+/* ---------- 1) section numbers 01/02/03 ---------- */
 .cs-h2__n{font-family:var(--mono);font-size:.46em;color:var(--lav);margin-right:.7em;
   vertical-align:.42em;letter-spacing:1px;opacity:.85}
 
-/* ---------- 4) right-side progress filament ---------- */
+/* ---------- 2) right-side progress filament ---------- */
 .cs-rail{position:fixed;right:24px;top:120px;bottom:120px;z-index:55;
   display:flex;flex-direction:column;justify-content:space-between;align-items:center;
   pointer-events:none;opacity:0;animation:csRailIn .6s ease .35s forwards}
@@ -61,7 +39,7 @@
 .cs-rail__node:hover::after,.cs-rail__node.is-active::after{opacity:1}
 @media (max-width:980px){ .cs-rail{display:none} }
 
-/* ---------- 5) prev/next hover preview ---------- */
+/* ---------- 3) prev/next hover preview ---------- */
 .cs-nav__link{position:relative;overflow:hidden}
 .cs-nav__inner{position:relative;z-index:1;display:flex;flex-direction:column;gap:6px;
   transition:transform .25s var(--ease)} /* JS nudges this toward the cursor */
@@ -84,8 +62,6 @@
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
-  .cs-scan{animation:none;opacity:0}
-  .cs-grid-shift{transform:none}
-  .cs-rail,.cs-cursor-glow{animation:none;opacity:1}
+  .cs-rail{animation:none;opacity:1}
   .cs-nav__inner{transition:none}
 }

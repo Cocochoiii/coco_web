@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  LABEL, ANSWERS, ROUTES, THINK,
+  LABEL, ANSWERS, ROUTES, THINK, PLACEHOLDERS, STARTERS,
 } from '../data/content.js';
 import { highlightWords } from '../lib/highlight.jsx';
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion.js';
+import '../styles/chat-fx.css';
 
 /* free-typed question -> topic (first keyword hit wins; order = specific to generic) */
 function route(text) {
@@ -22,7 +23,7 @@ function resolveAnswer(key) {
   if (!d) {
     return {
       full: "Good question — I don't have a scripted answer for that one, but here's what I can tell you about:",
-      follow: Object.keys(LABEL),
+      follow: STARTERS,
     };
   }
   return { full: d.a, follow: d.follow };
@@ -51,11 +52,10 @@ export default function Chat({ intro, initialSuggest, active = false }) {
   const idRef = useRef(0);
   const nextId = () => ++idRef.current;
 
-  const [items, setItems] = useState(() => [
-    { id: nextId(), type: 'bot', text: intro },
-    { id: nextId(), type: 'suggest', keys: initialSuggest },
-  ]);
+  const [items, setItems] = useState([]);
   const [value, setValue] = useState('');
+  const [focused, setFocused] = useState(false);
+  const [phIdx, setPhIdx] = useState(0);
   const [thinkIdx, setThinkIdx] = useState(0);
   const [streamId, setStreamId] = useState(null);
   const [streamShown, setStreamShown] = useState(0);
@@ -64,6 +64,39 @@ export default function Chat({ intro, initialSuggest, active = false }) {
   const inputRef = useRef(null);
   const timersRef = useRef([]);
   const completedRef = useRef(new Set());
+  const startedRef = useRef(false);
+
+  // Open like a real chat: a brief "typing…" beat, then a short greeting + a few
+  // starter chips. Plays when the panel first scrolls into view (or immediately
+  // under reduced motion / without IntersectionObserver).
+  function playIntro() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    const greet = () => setItems([
+      { id: nextId(), type: 'bot', text: intro },
+      { id: nextId(), type: 'suggest', keys: initialSuggest },
+    ]);
+    if (reduce) { greet(); return; }
+    setItems([{ id: nextId(), type: 'typing' }]);
+    const t = setTimeout(greet, 650);
+    timersRef.current.push(t);
+  }
+  useEffect(() => {
+    if (reduce || !('IntersectionObserver' in window) || !scrollRef.current) { playIntro(); return undefined; }
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((e) => { if (e.isIntersecting && e.intersectionRatio > 0.15) playIntro(); });
+    }, { threshold: [0, 0.15] });
+    io.observe(scrollRef.current);
+    return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // rotate the input hint while idle (paused on focus / when typing)
+  useEffect(() => {
+    if (reduce || focused || value) return undefined;
+    const id = setInterval(() => setPhIdx((i) => (i + 1) % PLACEHOLDERS.length), 3200);
+    return () => clearInterval(id);
+  }, [reduce, focused, value]);
 
   // auto-scroll to the newest content
   useEffect(() => {
@@ -189,14 +222,23 @@ export default function Chat({ intro, initialSuggest, active = false }) {
               </div>
             );
           }
+          if (it.type === 'typing') {
+            return (
+              <div className="msg bot" key={it.id}>
+                <Avatar />
+                <div className="bubble"><div className="typing"><span /><span /><span /></div></div>
+              </div>
+            );
+          }
           // suggest
           return (
             <div className="suggest" key={it.id}>
-              {it.keys.map((k) => (
+              {it.keys.map((k, i) => (
                 <button
                   key={k}
                   type="button"
                   className="qchip"
+                  style={{ '--i': i }}
                   data-q={k}
                   onClick={() => ask(k, false)}
                 >
@@ -214,9 +256,11 @@ export default function Chat({ intro, initialSuggest, active = false }) {
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Type your question…"
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={(focused || value) ? 'Type your question…' : PLACEHOLDERS[phIdx]}
           autoComplete="off"
-          aria-label="Type your question"
+          aria-label="Ask a question"
         />
         <button type="submit" aria-label="Send">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13" /><path d="M22 2l-7 20-4-9-9-4 20-7z" /></svg>

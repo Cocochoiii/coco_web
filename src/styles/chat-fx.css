@@ -1,0 +1,7 @@
+/* ============================================================
+   chat-fx.css — Ask-me-anything chat polish (loaded by Chat.jsx)
+   Suggestion chips fade in one-by-one ("offered", not dumped).
+   Reduced motion is handled by the global *{animation:none} rule.
+   ============================================================ */
+@keyframes qchipIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.suggest .qchip{animation:qchipIn .42s var(--ease) both;animation-delay:calc(var(--i,0) * 55ms)}

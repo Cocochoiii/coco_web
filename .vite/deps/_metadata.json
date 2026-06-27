@@ -1,0 +1,82 @@
+{
+  "hash": "01a1cbed",
+  "configHash": "ddeb040c",
+  "lockfileHash": "e8cbc652",
+  "browserHash": "0a4cffd2",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "948c56e0",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "7cf39aec",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "9e8d4fb0",
+      "needsInterop": false
+    },
+    "framer-motion": {
+      "src": "../../node_modules/framer-motion/dist/es/index.mjs",
+      "file": "framer-motion.js",
+      "fileHash": "1eef114d",
+      "needsInterop": false
+    },
+    "lenis": {
+      "src": "../../node_modules/lenis/dist/lenis.mjs",
+      "file": "lenis.js",
+      "fileHash": "5e74a41b",
+      "needsInterop": false
+    },
+    "three": {
+      "src": "../../node_modules/three/build/three.module.js",
+      "file": "three.js",
+      "fileHash": "08762295",
+      "needsInterop": false
+    },
+    "three/examples/jsm/lines/LineSegmentsGeometry.js": {
+      "src": "../../node_modules/three/examples/jsm/lines/LineSegmentsGeometry.js",
+      "file": "three_examples_jsm_lines_LineSegmentsGeometry__js.js",
+      "fileHash": "a461891e",
+      "needsInterop": false
+    },
+    "three/examples/jsm/lines/LineSegments2.js": {
+      "src": "../../node_modules/three/examples/jsm/lines/LineSegments2.js",
+      "file": "three_examples_jsm_lines_LineSegments2__js.js",
+      "fileHash": "eb82f08b",
+      "needsInterop": false
+    },
+    "three/examples/jsm/lines/LineMaterial.js": {
+      "src": "../../node_modules/three/examples/jsm/lines/LineMaterial.js",
+      "file": "three_examples_jsm_lines_LineMaterial__js.js",
+      "fileHash": "96da3765",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-JMVEG3FK": {
+      "file": "chunk-JMVEG3FK.js"
+    },
+    "chunk-TWJRYSII": {
+      "file": "chunk-TWJRYSII.js"
+    },
+    "chunk-JAZ6T5F4": {
+      "file": "chunk-JAZ6T5F4.js"
+    },
+    "chunk-4NWBLYMO": {
+      "file": "chunk-4NWBLYMO.js"
+    },
+    "chunk-ENE2EJVO": {
+      "file": "chunk-ENE2EJVO.js"
+    },
+    "chunk-DC5AMYBS": {
+      "file": "chunk-DC5AMYBS.js"
+    }
+  }
+}
