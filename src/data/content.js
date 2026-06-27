@@ -8,7 +8,7 @@
 export const LINKS = {
   github: 'https://github.com/Cocochoiii',
   // TODO: replace with your real LinkedIn URL
-  linkedin: 'https://www.linkedin.com/in/your-handle',
+  linkedin: 'https://www.linkedin.com/in/cocochoi/',
   email: 'choi.coco@northeastern.edu',
   phone: '617-762-8179',
   // Drop your PDF into /public as resume.pdf — this then serves at /resume.pdf.
