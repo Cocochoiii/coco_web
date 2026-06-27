@@ -18,8 +18,8 @@ export function initTechNetwork(canvas) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ===== TUNABLES ===== */
-  const R = 3.6;          // sphere radius (bigger = bigger ball)
-  const GROUP_Y = 0.0;   // move ball DOWN -> negative
+  const R = 3.3;          // sphere radius (bigger = bigger ball)
+  const GROUP_Y = 0.2;   // move ball DOWN -> negative
   const LINEWIDTH = 3.5;  // connecting-line thickness (px)
   const SPREAD = 1.95;    // node spacing
 
