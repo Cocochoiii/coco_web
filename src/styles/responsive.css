@@ -39,3 +39,37 @@
 @media (max-width: 980px) {
   .chat__input input { font-size: 16px; }
 }
+
+/* ============================================================
+   Added: mobile overflow & narrow-screen hardening
+   (appended below the original touch fixes; index.css untouched)
+   ============================================================ */
+
+/* 4) Media never exceeds its column. Also clamps the fixed case-page
+   background canvas (declared at 100vw) down to the real content width, so a
+   desktop scrollbar can never create a sliver of horizontal scroll. */
+img, svg, canvas, video { max-width: 100%; }
+
+/* 5) Long unbroken strings (emails, URLs, IDs, long titles) wrap instead of
+   pushing the layout wider than the screen. body already hides any x-overflow;
+   this keeps the *content* inside the column in the first place rather than
+   being clipped. */
+p, li, h1, h2, h3,
+.bubble, .cs-overview, .cs-title, .cs-nav__title, .contact__lede { overflow-wrap: break-word; }
+
+/* 6) Very small phones (<= 380px): the base 560px rule already shrinks the nav
+   font; here we also pull in the letter-spacing, gap and side padding so the
+   "CC" wordmark + all four links (TECH / WORK / ABOUT / CONTACT) comfortably
+   fit one line without being clipped on the right edge. */
+@media (max-width: 380px) {
+  .topnav { padding-inline: 14px; }
+  .topnav .links { gap: 10px; letter-spacing: .5px; font-size: 10px; }
+  .topnav .brand { font-size: 18px; }
+}
+
+/* 7) The About headline keeps its underlined phrase ("stay up under load.") on
+   one line by design. On the very narrowest screens — or when a user has bumped
+   up their accessibility text size — let it wrap so it can never be clipped. */
+@media (max-width: 360px) {
+  #about h2 .u { white-space: normal; }
+}
